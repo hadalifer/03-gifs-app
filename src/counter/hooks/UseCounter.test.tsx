@@ -33,7 +33,7 @@ describe('useCounter', () => {
         console.log(result.current.counter)
         expect(result.current.counter).toBe(12);
         act(() => { result.current.handleReset() });
-        console.log(result.current.counter)
+        //console.log(result.current.counter)
         expect(result.current.counter).toBe(10);
 
     })
