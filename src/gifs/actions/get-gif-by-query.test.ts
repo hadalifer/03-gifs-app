@@ -1,13 +1,13 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import AxiosMockAdapter from 'axios-mock-adapter';
 import { getGifsByQuery } from "./get-gif-by-query";
 import { giphyApi } from "../api/giphy.api";
 import { giphyResponseMock } from "../../mock-data/giphyResponse.mock";
 
 describe('getGifsByQuery', () => {
-    let mock = new AxiosMockAdapter(giphyApi);
+    const mock = new AxiosMockAdapter(giphyApi);
     beforeEach(() => {
-        mock = new AxiosMockAdapter(giphyApi);
+        mock.reset();
     })
 
     // test('should return a list of complete gifs', async () => {
@@ -47,6 +47,11 @@ describe('getGifsByQuery', () => {
     })
     test('should send an error when API returns an error', async () => {
 
+        const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+            console.log('hi, the error have been called correctly')
+        });
+
+
         mock.onGet('/search').reply(400, {
             data: {
                 message: 'Bad Request',
@@ -54,5 +59,8 @@ describe('getGifsByQuery', () => {
         });
         const gifs = await getGifsByQuery('1');
         console.log(gifs);
+        expect(consoleErrorSpy).toHaveBeenCalled();
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledWith(expect.anything());
     })
 })

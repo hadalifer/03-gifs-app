@@ -4,7 +4,7 @@ import type { Gif } from '../interfaces/gif.interfaces';
 import { getGifsByQuery } from '../actions/get-gif-by-query';
 
 // const gifCache: Record<string, Gif[]> = {};
-const useGifs = () => {
+export const useGifs = () => {
 
     const [previousTerms, setPreviousTerms] = useState<string[]>([]);
     const [gifsResoult, setGifsResoult] = useState<Gif[]>([]);
@@ -17,10 +17,10 @@ const useGifs = () => {
         const gifs = await getGifsByQuery(query);
         setGifsResoult(gifs)
         gifCache.current[query] = gifs;
-        console.log(gifCache);
+        // console.log(gifCache);
     }
-    const handleTermClicked = (term: string) => {
-        getGifResoult(term);
+    const handleTermClicked = async (term: string) => {
+        await getGifResoult(term);
 
     }
     const handleSearch = async (query: string) => {
@@ -29,7 +29,7 @@ const useGifs = () => {
         if (!previousTerms.includes(query)) {
             setPreviousTerms([query, ...previousTerms].slice(0, 5));
         }
-        getGifResoult(query);
+        await getGifResoult(query);
     }
     return {
         //values
